@@ -1,0 +1,22 @@
+# Flutter/Dart/Pub related
+.dart_tool/
+.packages
+.pub/
+build/
+# Hive local storage
+*.hive
+*.hive.lock
+# IDEs
+.idea/
+.vscode/
+# OS
+.DS_Store
+Thumbs.db
+# Generated files
+*.g.dart
+# Secrets
+.env
+# Test outputs
+coverage/
+
+.fake
