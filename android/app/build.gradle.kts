@@ -8,16 +8,16 @@ plugins {
 android {
     namespace = "com.quentin.focuswheel"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "28.1.13356709"
+    // ndkVersion = "28.1.13356709" // Commented out()(((-)'))
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-        isCoreLibraryDesugaringEnabled = true // Ajouté pour le desugaring Java 8+
+        // sourceCompatibility = JavaVersion.VERSION_11 // Commented out
+        // targetCompatibility = JavaVersion.VERSION_11 // Commented out
+        // isCoreLibraryDesugaringEnabled = true // Commented out
     }
-
+()
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        // jvmTarget = JavaVersion.VERSION_11.toString() // Commented out
     }
 
     defaultConfig {
@@ -44,5 +44,5 @@ flutter {
 }
 
 dependencies {
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4") // Mise à jour pour compatibilité avec flutter_local_notifications
+    // coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4") // Commented out
 }
