@@ -26,13 +26,16 @@ class RemindersList extends ConsumerWidget {
             subtitle: Text(_formatDate(reminder.scheduledAt)),
             trailing: IconButton(
               icon: const Icon(Icons.delete, color: Colors.red),
-              onPressed: () => ref.read(remindersProvider.notifier).deleteReminder(reminder.id),
+              onPressed: () => ref
+                  .read(remindersProvider.notifier)
+                  .deleteReminder(reminder.id),
               tooltip: 'Delete',
             ),
             onTap: () {
               showDialog(
                 context: context,
-                builder: (context) => ReminderCreationDialog(initialReminder: reminder),
+                builder: (context) =>
+                    ReminderCreationDialog(initialReminder: reminder),
               );
             },
           ),

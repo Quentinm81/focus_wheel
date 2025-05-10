@@ -4,6 +4,7 @@ import '../models/task.dart';
 import '../providers/task_provider.dart';
 import 'task_creation_dialog.dart';
 import '../services/motivational_engine.dart';
+import 'package:focus_wheel/ui/localization/app_localizations.dart';
 
 class KanbanBoard extends ConsumerWidget {
   const KanbanBoard({super.key});
@@ -12,15 +13,28 @@ class KanbanBoard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tasks = ref.watch(tasksProvider);
     final todo = tasks.where((t) => t.status == TaskStatus.todo).toList();
-    final inProgress = tasks.where((t) => t.status == TaskStatus.inProgress).toList();
+    final inProgress =
+        tasks.where((t) => t.status == TaskStatus.inProgress).toList();
     final done = tasks.where((t) => t.status == TaskStatus.done).toList();
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
       child: Row(
         children: [
-          _KanbanColumn(title: 'To Do', color: const Color(0xFF6EC1E4), tasks: todo, status: TaskStatus.todo),
-          _KanbanColumn(title: 'In Progress', color: const Color(0xFFAED581), tasks: inProgress, status: TaskStatus.inProgress),
-          _KanbanColumn(title: 'Done', color: const Color(0xFFBA68C8), tasks: done, status: TaskStatus.done),
+          _KanbanColumn(
+              title: 'toDo',
+              color: const Color(0xFF6EC1E4),
+              tasks: todo,
+              status: TaskStatus.todo),
+          _KanbanColumn(
+              title: 'inProgress',
+              color: const Color(0xFFAED581),
+              tasks: inProgress,
+              status: TaskStatus.inProgress),
+          _KanbanColumn(
+              title: 'done',
+              color: const Color(0xFFBA68C8),
+              tasks: done,
+              status: TaskStatus.done),
         ],
       ),
     );
@@ -32,7 +46,11 @@ class _KanbanColumn extends ConsumerWidget {
   final Color color;
   final List<Task> tasks;
   final TaskStatus status;
-  const _KanbanColumn({required this.title, required this.color, required this.tasks, required this.status});
+  const _KanbanColumn(
+      {required this.title,
+      required this.color,
+      required this.tasks,
+      required this.status});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -47,16 +65,20 @@ class _KanbanColumn extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(title, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: color)),
+              child: Text(AppLocalizations.of(context)!.translate(title),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 18, color: color)),
             ),
             Expanded(
               child: DragTarget<Task>(
-                onWillAcceptWithDetails: (details) => details.data.status != status,
+                onWillAcceptWithDetails: (details) =>
+                    details.data.status != status,
                 onAcceptWithDetails: (details) {
                   final task = details.data;
                   ref.read(tasksProvider.notifier).moveTask(task, status);
                 },
-                builder: (context, candidateData, rejectedData) => ListView.builder(
+                builder: (context, candidateData, rejectedData) =>
+                    ListView.builder(
                   padding: EdgeInsets.zero,
                   itemCount: tasks.length > 7 ? 7 : tasks.length,
                   itemBuilder: (context, i) {
@@ -64,7 +86,8 @@ class _KanbanColumn extends ConsumerWidget {
                     return AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       curve: Curves.easeInOut,
-                      margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 8),
+                      margin: const EdgeInsets.symmetric(
+                          vertical: 5, horizontal: 8),
                       child: LongPressDraggable<Task>(
                         data: task,
                         feedback: Material(
@@ -72,24 +95,34 @@ class _KanbanColumn extends ConsumerWidget {
                           child: Card(
                             color: color.withAlpha((0.5 * 255).toInt()),
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                              child: Text(task.title, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 18)),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 10),
+                              child: Text(task.title,
+                                  style: TextStyle(
+                                      color: color,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18)),
                             ),
                           ),
                         ),
-                        childWhenDragging: Opacity(opacity: 0.4, child: _buildTaskTile(context, ref, task, color, status)),
-                        child: _buildTaskTile(context, ref, task, color, status),
+                        childWhenDragging: Opacity(
+                            opacity: 0.4,
+                            child: _buildTaskTile(
+                                context, ref, task, color, status)),
+                        child:
+                            _buildTaskTile(context, ref, task, color, status),
                       ),
                     );
                   },
                 ),
               ),
             ),
-            // Ajout du message "Scroll for more..." à la fin de la colonne SI plus de 7 tâches
             if (tasks.length > 7)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 6),
-                child: Text('Scroll for more...', style: TextStyle(fontSize: 12, color: Colors.grey)),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Text(
+                    AppLocalizations.of(context)!.translate('scrollForMore'),
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
               ),
           ],
         ),
@@ -97,18 +130,20 @@ class _KanbanColumn extends ConsumerWidget {
     );
   }
 
-  // Place ces méthodes en dehors de build pour éviter toute confusion
-  Widget _buildTaskTile(BuildContext context, WidgetRef ref, Task task, Color color, TaskStatus status) {
+  Widget _buildTaskTile(BuildContext context, WidgetRef ref, Task task,
+      Color color, TaskStatus status) {
     return Card(
       color: color.withAlpha((0.22 * 255).toInt()),
       child: ListTile(
-        title: Text(task.title, style: TextStyle(color: color, fontWeight: FontWeight.w600)),
+        title: Text(task.title,
+            style: TextStyle(color: color, fontWeight: FontWeight.w600)),
         trailing: PopupMenuButton<TaskStatus>(
           icon: const Icon(Icons.more_vert),
           onSelected: (newStatus) async {
             ref.read(tasksProvider.notifier).moveTask(task, newStatus);
             if (newStatus == TaskStatus.done) {
-              final phrase = await MotivationalEngine.getPhrase(tags: ['task', 'achievement']);
+              final phrase = await MotivationalEngine.getPhrase(
+                  tags: ['task', 'achievement']);
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -124,7 +159,8 @@ class _KanbanColumn extends ConsumerWidget {
               .where((s) => s != status)
               .map((s) => PopupMenuItem(
                     value: s,
-                    child: Text(_statusLabel(s)),
+                    child: Text(AppLocalizations.of(context)!
+                        .translate(_statusLabel(s))),
                   ))
               .toList(),
         ),
@@ -141,12 +177,11 @@ class _KanbanColumn extends ConsumerWidget {
   String _statusLabel(TaskStatus status) {
     switch (status) {
       case TaskStatus.todo:
-        return 'To Do';
+        return 'toDo';
       case TaskStatus.inProgress:
-        return 'In Progress';
+        return 'inProgress';
       case TaskStatus.done:
-        return 'Done';
+        return 'done';
     }
   }
 }
-

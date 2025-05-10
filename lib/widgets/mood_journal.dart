@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+import 'package:focus_wheel/ui/localization/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../providers/mood_journal_provider.dart';
 import '../services/motivational_engine.dart';
@@ -13,7 +14,10 @@ class MoodJournal extends ConsumerWidget {
     final entries = ref.watch(moodJournalProvider);
     final today = DateTime.now();
     final todayEntry = entries.firstWhere(
-      (e) => e.date.year == today.year && e.date.month == today.month && e.date.day == today.day,
+      (e) =>
+          e.date.year == today.year &&
+          e.date.month == today.month &&
+          e.date.day == today.day,
       orElse: () => MoodEntry.empty(),
     );
     return Padding(
@@ -21,38 +25,49 @@ class MoodJournal extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('How are you feeling today?', style: Theme.of(context).textTheme.titleLarge),
+          Text(AppLocalizations.of(context)!.translate('howAreYouFeelingToday'),
+              style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: MoodLevel.values.map((mood) => _MoodIcon(
-              mood: mood,
-              selected: todayEntry.mood == mood,
-              onTap: () {
-                _showMoodDialog(context, ref, mood, todayEntry);
-              },
-            )).toList(),
+            children: MoodLevel.values
+                .map((mood) => _MoodIcon(
+                      mood: mood,
+                      selected: todayEntry.mood == mood,
+                      onTap: () {
+                        _showMoodDialog(context, ref, mood, todayEntry);
+                      },
+                    ))
+                .toList(),
           ),
           const SizedBox(height: 28),
-          Text('Recent Entries', style: Theme.of(context).textTheme.titleMedium),
+          Text(AppLocalizations.of(context)!.translate('recentEntries'),
+              style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           Expanded(
             child: entries.isEmpty
-                ? const Center(child: Text('No mood entries yet.'))
+                ? Center(
+                    child: Text(AppLocalizations.of(context)!
+                        .translate('noMoodEntries')))
                 : ListView.builder(
                     itemCount: entries.length,
                     itemBuilder: (context, i) {
                       final e = entries[entries.length - 1 - i];
                       return Card(
                         color: Colors.blue[50],
-                        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 4, horizontal: 2),
                         child: ListTile(
                           leading: _MoodIcon(mood: e.mood, selected: false),
                           title: Text(_formatDate(e.date)),
-                          subtitle: e.note != null && e.note!.isNotEmpty ? Text(e.note!) : null,
+                          subtitle: e.note != null && e.note!.isNotEmpty
+                              ? Text(e.note!)
+                              : null,
                           trailing: IconButton(
                             icon: const Icon(Icons.delete, color: Colors.red),
-                            onPressed: () => ref.read(moodJournalProvider.notifier).deleteMood(e.id),
+                            onPressed: () => ref
+                                .read(moodJournalProvider.notifier)
+                                .deleteMood(e.id),
                           ),
                         ),
                       );
@@ -64,21 +79,25 @@ class MoodJournal extends ConsumerWidget {
     );
   }
 
-  void _showMoodDialog(BuildContext context, WidgetRef ref, MoodLevel mood, MoodEntry? existing) {
+  void _showMoodDialog(BuildContext context, WidgetRef ref, MoodLevel mood,
+      MoodEntry? existing) {
     final noteController = TextEditingController(text: existing?.note ?? '');
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text('Log Mood'),
+        title: Text(AppLocalizations.of(context)!.translate('logMood')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(_moodLabel(mood), style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.translate(_moodLabel(mood)),
+                style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             TextField(
               controller: noteController,
-              decoration: const InputDecoration(labelText: 'Add a note (optional)'),
+              decoration: InputDecoration(
+                  labelText:
+                      AppLocalizations.of(context)!.translate('addNote')),
               minLines: 1,
               maxLines: 3,
             ),
@@ -87,10 +106,11 @@ class MoodJournal extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.translate('cancel')),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF64B5F6)),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF64B5F6)),
             onPressed: () async {
               final today = DateTime.now();
               final entry = MoodEntry(
@@ -105,7 +125,8 @@ class MoodJournal extends ConsumerWidget {
                 ref.read(moodJournalProvider.notifier).addMood(entry);
               }
               Navigator.pop(context);
-              final phrase = await MotivationalEngine.getPhrase(tags: ['mood', 'encouragement']);
+              final phrase = await MotivationalEngine.getPhrase(
+                  tags: ['mood', 'encouragement']);
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -116,7 +137,7 @@ class MoodJournal extends ConsumerWidget {
                 );
               }
             },
-            child: const Text('Save'),
+            child: Text(AppLocalizations.of(context)!.translate('save')),
           ),
         ],
       ),
@@ -130,15 +151,15 @@ class MoodJournal extends ConsumerWidget {
   String _moodLabel(MoodLevel mood) {
     switch (mood) {
       case MoodLevel.verySad:
-        return 'Very Sad';
+        return 'verySad';
       case MoodLevel.sad:
-        return 'Sad';
+        return 'sad';
       case MoodLevel.neutral:
-        return 'Neutral';
+        return 'neutral';
       case MoodLevel.happy:
-        return 'Happy';
+        return 'happy';
       case MoodLevel.veryHappy:
-        return 'Very Happy';
+        return 'veryHappy';
     }
   }
 }
@@ -179,7 +200,8 @@ class _MoodIcon extends StatelessWidget {
       onTap: onTap,
       child: CircleAvatar(
         radius: selected ? 28 : 24,
-        backgroundColor: selected ? color.withAlpha((0.3 * 255).toInt()) : Colors.grey[100],
+        backgroundColor:
+            selected ? color.withAlpha((0.3 * 255).toInt()) : Colors.grey[100],
         child: Icon(icon, color: color, size: selected ? 36 : 30),
       ),
     );

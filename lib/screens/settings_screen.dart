@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../ui/localization/app_localizations.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -27,7 +28,8 @@ class SettingsScreen extends ConsumerWidget {
             leading: const Icon(Icons.notifications),
             title: const Text('Notifications'),
             subtitle: const Text('Enable or disable reminders'),
-            trailing: Switch(value: true, onChanged: (v) {}), // TODO: Bind to state
+            trailing:
+                Switch(value: true, onChanged: (v) {}), // TODO: Bind to state
           ),
           ListTile(
             leading: const Icon(Icons.cloud_sync),
@@ -48,7 +50,10 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('About'),
-            subtitle: const Text('Focus Wheel v1.0'),
+            subtitle: Text(
+              AppLocalizations.of(context)?.translate('appTitle') ??
+                  'Focus Wheel v1.0',
+            ),
           ),
         ],
       ),
