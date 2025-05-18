@@ -48,8 +48,42 @@ assets/
 ## Setup
 1. Install Flutter SDK and dependencies.
 2. Run `flutter pub get` to fetch packages.
-3. Configure Hive and Supabase as needed (see `/lib/services`).
-4. Build and run on Android device/emulator.
+
+---
+
+## Build sécurisé Android (protection maximale du code)
+
+Pour générer un APK ou un App Bundle (AAB) Android avec la protection maximale du code (obfuscation Dart + ProGuard/R8 + séparation des symboles) :
+
+1. **Pré-requis** :
+   - Flutter installé et accessible dans le terminal (`flutter --version` doit fonctionner)
+   - Clé de signature release configurée (remplace la clé debug par une clé sécurisée dans `android/app/build.gradle.kts`)
+
+2. **Commande de build sécurisée** :
+
+   Pour un APK release :
+   ```sh
+   flutter build apk --release --obfuscate --split-debug-info=build/debug-info
+   ```
+   Pour un App Bundle (AAB) pour le Play Store :
+   ```sh
+   flutter build appbundle --release --obfuscate --split-debug-info=build/debug-info
+   ```
+
+   - Le dossier `build/debug-info` doit être conservé en lieu sûr (il permet de décoder les crashs, mais ne doit jamais être publié).
+
+3. **Vérifications complémentaires** :
+   - Le flag `android:debuggable="false"` doit être présent dans le manifeste pour la release.
+   - L'obfuscation ProGuard/R8 est activée dans `android/app/build.gradle.kts` (`isMinifyEnabled = true`).
+   - Le fichier `proguard-rules.pro` est présent et adapté à Flutter.
+
+4. **Bonnes pratiques** :
+   - Ne jamais publier la clé de signature ni le dossier `build/debug-info`.
+   - Scanner l’APK/AAB avec un outil de sécurité (MobSF, VirusTotal) avant publication.
+
+---
+
+Pour toute question sur la sécurité ou l’automatisation du build, voir la documentation Flutter officielle ou contacter le mainteneur du projet.
 
 ## Developer Guidelines
 - Modularize code for maintainability and expansion.
