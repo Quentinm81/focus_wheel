@@ -1,0 +1,60 @@
+
+# .github/workflows/claude-code.yml
+name: "🔍🛡️ Audit & Optimisation Totale (Claude 4 Code)"
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:   # lancement manuel au besoin
+
+permissions:
+  contents: write          # pour committer les corrections
+  pull-requests: write     # pour ouvrir / mettre à jour des PR
+
+jobs:
+  claude-full-review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Claude 4 Code – Analyse & Corrections
+        uses: anthropics/claude-code-action@beta   # action officielle
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token:      ${{ secrets.GITHUB_TOKEN }}
+
+          # Prompt injecté automatiquement sans @mention
+          direct_prompt: |
+            Tu es Claude 4 Code, expert senior Android/iOS.
+            Objectifs :
+            1. Analyse exhaustive du dépôt : architecture, dépendances, vulnérabilités.
+            2. Cibler Android 13→15, préparer portage iOS (Swift/Kotlin Multiplatform).
+            3. Corriger toutes les erreurs de lint, build ou test.
+            4. Renforcer la sécurité (OWASP Mobile + Android Vulnerabilities), éliminer XSS, SQLi, mauvaise gestion TLS.
+            5. Optimiser performances (taille APK/AAB, threads, battery, réseau).
+            6. Si nécessaire, réécris ou refactorise le code pour atteindre la conformité et la qualité maximale.
+            7. Génére les tests unitaires et instrumentés manquants.
+            8. Pousse les modifications dans une branche `fix/claude-auto` et ouvre/actualise la PR associée.
+            9. Continue jusqu’à ce que tous les check-lists soient cochés ou qu’aucune tâche ne reste.
+
+          model: claude-4-code   # assure l’usage du modèle de dernière génération
+          timeout_minutes: 120   # prolonge la session si besoin
+
+          # Habilitations bash explicites
+          allowed_tools: |
+            Bash(./gradlew lint),
+            Bash(./gradlew detekt),
+            Bash(./gradlew test),
+            Bash(./gradlew assembleRelease),
+            Edit,Replace
+
+          # Empêche tout outil risqué
+          disallowed_tools: "TaskOutput,KillTask"
+
+      - name: Rapport final (facultatif)
+        if: always()
+        run: echo "Analyse complète exécutée par Claude."
