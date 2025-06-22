@@ -1,0 +1,28 @@
+{
+  "name": "focus-wheel-backend",
+  "version": "1.0.0",
+  "description": "API backend pour Focus Wheel (endpoints d'abonnement Stripe)",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "NODE_ENV=test jest --runInBand"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2",
+    "stripe": "^14.19.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "nock": "^13.4.0",
+    "nodemon": "^3.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
