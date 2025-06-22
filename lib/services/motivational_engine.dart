@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:flutter/services.dart' show rootBundle;
 import 'dart:math';
+import 'package:flutter/services.dart' show rootBundle;
 
 class MotivationalPhrase {
   final String text;

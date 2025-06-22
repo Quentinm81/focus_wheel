@@ -11,7 +11,7 @@ import 'package:focus_wheel/main.dart';
 
 void main() {
   testWidgets('App renders without crashing', (WidgetTester tester) async {
-    await tester.pumpWidget(const FocusWheelApp());
+    await tester.pumpWidget(const ProviderScope(child: FocusWheelApp()));
     expect(find.byType(MaterialApp), findsOneWidget);
   });
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:focus_wheel/services/hive_service.dart';
 import 'package:focus_wheel/services/notification_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,6 +27,9 @@ class FocusWheelApp extends ConsumerWidget {
           AppLocalizations.of(context)?.translate('appTitle') ?? 'Focus Wheel',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
         AppLocalizations.delegate,
         // Add Flutter built-in delegates if needed
       ],
