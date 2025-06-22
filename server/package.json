@@ -1,0 +1,28 @@
+{
+  "name": "focus-wheel-backend",
+  "version": "0.1.0",
+  "description": "Backend API for Focus Wheel app (subscription management).",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "NODE_ENV=test jest --runInBand",
+    "smoke": "node tests/smoke.http.js",
+    "validate": "npm test && npm run smoke"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2",
+    "stripe": "^13.17.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^6.4.2"
+  }
+}
