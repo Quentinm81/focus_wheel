@@ -30,4 +30,4 @@ Thumbs.db
 coverage/
 test_output.txt
 
-.fake
+.fake/flutter_sdk/
