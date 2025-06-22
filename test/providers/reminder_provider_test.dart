@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import '../helpers/test_helpers.dart';
 import '../helpers/fake_box.dart';
 
 import 'package:focus_wheel/providers/reminder_provider.dart';
@@ -8,6 +9,7 @@ import 'package:focus_wheel/models/reminder.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   group('RemindersNotifier', () {
+    setUpAll(() => setupTestDependencies());
     late FakeBox<Reminder> box;
     late RemindersNotifier notifier;
     
