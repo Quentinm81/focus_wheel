@@ -10,8 +10,23 @@ const stripe = Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_dummy');
 
 const app = express();
 
-// Middleware CORS
-app.use(cors());
+// Middleware CORS sécurisé (origines autorisées définies dans CLIENT_ORIGIN)
+const allowedOrigins = (process.env.CLIENT_ORIGIN || '').split(',').map((o) => o.trim()).filter((o) => o);
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Autorise les requêtes server-side ou Postman sans header Origin
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+  }),
+);
 
 // -----------------------------------------------------------------------------
 // Webhook Stripe (doit être déclaré AVANT express.json())
