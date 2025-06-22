@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import 'package:focus_wheel/ui/localization/app_localizations.dart';
+import 'package:focus_wheel/generated/app_localizations.dart';
 import '../models/timer_session.dart';
 import '../providers/timer_session_provider.dart';
 import '../services/motivational_engine.dart';
@@ -65,14 +65,14 @@ class _TimerCircleState extends ConsumerState<TimerCircle>
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(AppLocalizations.of(context)!.translate('wellDone')),
+        title: Text(AppLocalizations.of(context)!.wellDone),
         content: Text(AppLocalizations.of(context)!
-                .translate('youCompletedFocusSession') +
+                .youCompletedFocusSession +
             '\n\n"$phrase"'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.translate('ok')),
+            child: Text(AppLocalizations.of(context)!.ok),
           ),
         ],
       ),
@@ -145,8 +145,8 @@ class _TimerCircleState extends ConsumerState<TimerCircle>
                 const SizedBox(height: 8),
                 Text(
                     _isRunning
-                        ? AppLocalizations.of(context)!.translate('focusing')
-                        : AppLocalizations.of(context)!.translate('ready'),
+                        ? AppLocalizations.of(context)!.focusing
+                        : AppLocalizations.of(context)!.ready,
                     style: TextStyle(color: Colors.grey[600], fontSize: 18)),
               ],
             ),
@@ -156,7 +156,7 @@ class _TimerCircleState extends ConsumerState<TimerCircle>
         _isRunning
             ? ElevatedButton.icon(
                 icon: const Icon(Icons.stop),
-                label: Text(AppLocalizations.of(context)!.translate('stop')),
+                label: Text(AppLocalizations.of(context)!.stop),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red[400],
                   foregroundColor: Colors.white,
@@ -167,7 +167,7 @@ class _TimerCircleState extends ConsumerState<TimerCircle>
               )
             : ElevatedButton.icon(
                 icon: const Icon(Icons.play_arrow),
-                label: Text(AppLocalizations.of(context)!.translate('start')),
+                label: Text(AppLocalizations.of(context)!.start),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFAED581),
                   foregroundColor: Colors.white,
@@ -178,11 +178,11 @@ class _TimerCircleState extends ConsumerState<TimerCircle>
               ),
         const SizedBox(height: 28),
         Text(
-            AppLocalizations.of(context)!.translate('sessions') +
+            AppLocalizations.of(context)!.sessions +
                 ': $totalSessions',
             style: TextStyle(color: Colors.grey[700], fontSize: 16)),
         Text(
-            AppLocalizations.of(context)!.translate('totalTime') +
+            AppLocalizations.of(context)!.totalTime +
                 ': $totalMinutes min',
             style: TextStyle(color: Colors.grey[700], fontSize: 16)),
       ],

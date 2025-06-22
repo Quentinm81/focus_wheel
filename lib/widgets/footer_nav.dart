@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:focus_wheel/ui/localization/app_localizations.dart';
+import 'package:focus_wheel/generated/app_localizations.dart';
 
 class FooterNav extends StatefulWidget {
   final int selectedIndex;
@@ -21,22 +21,22 @@ class _FooterNavState extends State<FooterNav> {
       items: [
         BottomNavigationBarItem(
             icon: Icon(Icons.calendar_today),
-            label: AppLocalizations.of(context)!.translate('agendaTitle')),
+            label: AppLocalizations.of(context)!.agendaTitle),
         BottomNavigationBarItem(
             icon: Icon(Icons.check_circle),
-            label: AppLocalizations.of(context)!.translate('tasksTitle')),
+            label: AppLocalizations.of(context)!.tasksTitle),
         BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
-            label: AppLocalizations.of(context)!.translate('remindersTitle')),
+            label: AppLocalizations.of(context)!.remindersTitle),
         BottomNavigationBarItem(
             icon: Icon(Icons.mood),
-            label: AppLocalizations.of(context)!.translate('moodJournalTitle')),
+            label: AppLocalizations.of(context)!.moodJournalTitle),
         BottomNavigationBarItem(
             icon: Icon(Icons.bar_chart),
-            label: AppLocalizations.of(context)!.translate('statisticsTitle')),
+            label: AppLocalizations.of(context)!.statisticsTitle),
         BottomNavigationBarItem(
             icon: Icon(Icons.settings),
-            label: AppLocalizations.of(context)!.translate('settingsTitle')),
+            label: AppLocalizations.of(context)!.settingsTitle),
       ],
     );
   }

@@ -5,7 +5,7 @@ import '../providers/timer_session_provider.dart';
 import '../providers/task_provider.dart';
 import '../providers/reminder_provider.dart';
 import '../providers/mood_journal_provider.dart';
-import 'package:focus_wheel/ui/localization/app_localizations.dart';
+import 'package:focus_wheel/generated/app_localizations.dart';
 
 class StatisticsDashboard extends ConsumerWidget {
   const StatisticsDashboard({super.key});
@@ -42,46 +42,47 @@ class StatisticsDashboard extends ConsumerWidget {
       padding: const EdgeInsets.all(20),
       children: [
         _StatCard(
-          title: AppLocalizations.of(context)!.translate('totalTime'),
+          title: AppLocalizations.of(context)!.totalTime,
           value: '$totalFocusMin min',
           icon: Icons.timer,
           color: const Color(0xFF4DD0E1),
         ),
         _StatCard(
-          title: AppLocalizations.of(context)!.translate('tasksCompleted'),
+          title: AppLocalizations.of(context)!.tasksCompleted,
           value: '$tasksDone',
           icon: Icons.check_circle_outline,
           color: const Color(0xFFBA68C8),
         ),
         _StatCard(
-          title: AppLocalizations.of(context)!.translate('remindersSet'),
+          title: AppLocalizations.of(context)!.remindersSet,
           value: '$remindersSet',
           icon: Icons.alarm,
           color: const Color(0xFFFFB74D),
         ),
         _StatCard(
-          title: AppLocalizations.of(context)!.translate('averageMood'),
+          title: AppLocalizations.of(context)!.averageMood,
           value: avgMood == null
               ? 'N/A'
-              : AppLocalizations.of(context)!.translate(_moodLabel(avgMood)),
+              : _moodLabelText(avgMood, context),
           icon: Icons.sentiment_satisfied_alt,
           color: const Color(0xFF64B5F6),
         ),
         const SizedBox(height: 24),
         Center(
             child: Text(
-                AppLocalizations.of(context)!.translate('chartsComingSoon'),
+                AppLocalizations.of(context)!.chartsComingSoon,
                 style: TextStyle(color: Colors.grey[600]))),
       ],
     );
   }
 
-  String _moodLabel(double avgMood) {
-    if (avgMood < 0.5) return 'verySad';
-    if (avgMood < 1.5) return 'sad';
-    if (avgMood < 2.5) return 'neutral';
-    if (avgMood < 3.5) return 'happy';
-    return 'veryHappy';
+  String _moodLabelText(double avgMood, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    if (avgMood < 0.5) return l10n.verySad;
+    if (avgMood < 1.5) return l10n.sad;
+    if (avgMood < 2.5) return l10n.neutral;
+    if (avgMood < 3.5) return l10n.happy;
+    return l10n.veryHappy;
   }
 }
 

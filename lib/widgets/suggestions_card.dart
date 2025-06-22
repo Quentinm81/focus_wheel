@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:focus_wheel/ui/localization/app_localizations.dart';
+import 'package:focus_wheel/generated/app_localizations.dart';
 import '../providers/suggestions_provider.dart';
 
 class SuggestionsCard extends ConsumerWidget {
@@ -20,7 +20,7 @@ class SuggestionsCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(AppLocalizations.of(context)!.translate('smartSuggestions'),
+            Text(AppLocalizations.of(context)!.smartSuggestions,
                 style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,

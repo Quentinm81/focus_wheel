@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
-import 'package:focus_wheel/ui/localization/app_localizations.dart';
+import 'package:focus_wheel/generated/app_localizations.dart';
 import '../models/mood_entry.dart';
 import '../providers/mood_journal_provider.dart';
 import '../services/motivational_engine.dart';
@@ -25,7 +25,7 @@ class MoodJournal extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppLocalizations.of(context)!.translate('howAreYouFeelingToday'),
+          Text(AppLocalizations.of(context)!.howAreYouFeelingToday,
               style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
           Row(
@@ -41,14 +41,14 @@ class MoodJournal extends ConsumerWidget {
                 .toList(),
           ),
           const SizedBox(height: 28),
-          Text(AppLocalizations.of(context)!.translate('recentEntries'),
+          Text(AppLocalizations.of(context)!.recentEntries,
               style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
           Expanded(
             child: entries.isEmpty
                 ? Center(
                     child: Text(AppLocalizations.of(context)!
-                        .translate('noMoodEntries')))
+                        .noMoodEntries))
                 : ListView.builder(
                     itemCount: entries.length,
                     itemBuilder: (context, i) {
@@ -86,18 +86,18 @@ class MoodJournal extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Text(AppLocalizations.of(context)!.translate('logMood')),
+        title: Text(AppLocalizations.of(context)!.logMood),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(AppLocalizations.of(context)!.translate(_moodLabel(mood)),
+            Text(_moodLabelText(mood, context),
                 style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             TextField(
               controller: noteController,
               decoration: InputDecoration(
                   labelText:
-                      AppLocalizations.of(context)!.translate('addNote')),
+                      AppLocalizations.of(context)!.addNote),
               minLines: 1,
               maxLines: 3,
             ),
@@ -106,7 +106,7 @@ class MoodJournal extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text(AppLocalizations.of(context)!.translate('cancel')),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -137,7 +137,7 @@ class MoodJournal extends ConsumerWidget {
                 );
               }
             },
-            child: Text(AppLocalizations.of(context)!.translate('save')),
+            child: Text(AppLocalizations.of(context)!.save),
           ),
         ],
       ),
@@ -148,18 +148,19 @@ class MoodJournal extends ConsumerWidget {
     return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
   }
 
-  String _moodLabel(MoodLevel mood) {
+  String _moodLabelText(MoodLevel mood, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (mood) {
       case MoodLevel.verySad:
-        return 'verySad';
+        return l10n.verySad;
       case MoodLevel.sad:
-        return 'sad';
+        return l10n.sad;
       case MoodLevel.neutral:
-        return 'neutral';
+        return l10n.neutral;
       case MoodLevel.happy:
-        return 'happy';
+        return l10n.happy;
       case MoodLevel.veryHappy:
-        return 'veryHappy';
+        return l10n.veryHappy;
     }
   }
 }

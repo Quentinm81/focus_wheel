@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
-import '../ui/localization/app_localizations.dart';
+import 'package:focus_wheel/generated/app_localizations.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
             const CircularProgressIndicator(),
             const SizedBox(height: 24),
             Text(
-              AppLocalizations.of(context)?.translate('appTitle') ??
+              AppLocalizations.of(context)?.appTitle ??
                   'Focus Wheel',
               style: const TextStyle(
                 fontSize: 28,

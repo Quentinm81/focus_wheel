@@ -5,7 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'providers/settings_provider.dart';
 import 'screens/home_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'ui/localization/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:focus_wheel/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,12 +23,13 @@ class FocusWheelApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     return MaterialApp(
-      title:
-          AppLocalizations.of(context)?.translate('appTitle') ?? 'Focus Wheel',
+      title: 'Focus Wheel',
       debugShowCheckedModeBanner: false,
-      localizationsDelegates: [
+      localizationsDelegates: const [
         AppLocalizations.delegate,
-        // Add Flutter built-in delegates if needed
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
         Locale('en'),
@@ -92,8 +94,7 @@ class _SplashScreenState extends State<SplashScreen> {
             CircularProgressIndicator(color: Color(0xFF6EC1E4)),
             const SizedBox(height: 24),
             Text(
-              AppLocalizations.of(context)?.translate('appTitle') ??
-                  'Focus Wheel',
+              AppLocalizations.of(context)?.appTitle ?? 'Focus Wheel',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,

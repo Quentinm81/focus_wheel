@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../ui/localization/app_localizations.dart';
+import 'package:focus_wheel/generated/app_localizations.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -10,7 +10,7 @@ class SettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF90A4AE),
-        title: const Text('Settings', style: TextStyle(color: Colors.white)),
+        title: Text(AppLocalizations.of(context)!.settingsTitle, style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: ListView(
@@ -18,7 +18,7 @@ class SettingsScreen extends ConsumerWidget {
         children: [
           ListTile(
             leading: const Icon(Icons.palette),
-            title: const Text('Theme'),
+            title: Text(AppLocalizations.of(context)!.theme),
             subtitle: const Text('Light / Dark'),
             onTap: () {
               // TODO: Implement theme switching
@@ -26,15 +26,15 @@ class SettingsScreen extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.notifications),
-            title: const Text('Notifications'),
+            title: Text(AppLocalizations.of(context)!.notifications),
             subtitle: const Text('Enable or disable reminders'),
             trailing:
                 Switch(value: true, onChanged: (v) {}), // TODO: Bind to state
           ),
           ListTile(
             leading: const Icon(Icons.cloud_sync),
-            title: const Text('Cloud Sync'),
-            subtitle: const Text('Backup and sync your data'),
+            title: Text(AppLocalizations.of(context)!.cloudSync),
+            subtitle: Text(AppLocalizations.of(context)!.backup),
             onTap: () async {
               // await CloudSyncService.backupData();
               if (context.mounted) {
@@ -49,9 +49,9 @@ class SettingsScreen extends ConsumerWidget {
           ),
           ListTile(
             leading: const Icon(Icons.info_outline),
-            title: const Text('About'),
+            title: Text(AppLocalizations.of(context)!.about),
             subtitle: Text(
-              AppLocalizations.of(context)?.translate('appTitle') ??
+              AppLocalizations.of(context)?.appTitle ??
                   'Focus Wheel v1.0',
             ),
           ),

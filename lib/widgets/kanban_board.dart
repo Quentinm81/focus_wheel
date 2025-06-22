@@ -4,7 +4,7 @@ import '../models/task.dart';
 import '../providers/task_provider.dart';
 import 'task_creation_dialog.dart';
 import '../services/motivational_engine.dart';
-import 'package:focus_wheel/ui/localization/app_localizations.dart';
+import 'package:focus_wheel/generated/app_localizations.dart';
 
 class KanbanBoard extends ConsumerWidget {
   const KanbanBoard({super.key});
@@ -65,7 +65,7 @@ class _KanbanColumn extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Text(AppLocalizations.of(context)!.translate(title),
+              child: Text(_getColumnTitle(title, context),
                   style: TextStyle(
                       fontWeight: FontWeight.bold, fontSize: 18, color: color)),
             ),
@@ -121,7 +121,7 @@ class _KanbanColumn extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Text(
-                    AppLocalizations.of(context)!.translate('scrollForMore'),
+                    AppLocalizations.of(context)!.scrollForMore,
                     style: TextStyle(fontSize: 12, color: Colors.grey)),
               ),
           ],
@@ -159,8 +159,7 @@ class _KanbanColumn extends ConsumerWidget {
               .where((s) => s != status)
               .map((s) => PopupMenuItem(
                     value: s,
-                    child: Text(AppLocalizations.of(context)!
-                        .translate(_statusLabel(s))),
+                    child: Text(_getStatusLabel(s, context)),
                   ))
               .toList(),
         ),
@@ -174,14 +173,29 @@ class _KanbanColumn extends ConsumerWidget {
     );
   }
 
-  String _statusLabel(TaskStatus status) {
+  String _getColumnTitle(String title, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (title) {
+      case 'toDo':
+        return l10n.toDo;
+      case 'inProgress':
+        return l10n.inProgress;
+      case 'done':
+        return l10n.done;
+      default:
+        return title;
+    }
+  }
+
+  String _getStatusLabel(TaskStatus status, BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     switch (status) {
       case TaskStatus.todo:
-        return 'toDo';
+        return l10n.toDo;
       case TaskStatus.inProgress:
-        return 'inProgress';
+        return l10n.inProgress;
       case TaskStatus.done:
-        return 'done';
+        return l10n.done;
     }
   }
 }
