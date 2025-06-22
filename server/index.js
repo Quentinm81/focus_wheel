@@ -13,7 +13,41 @@ const app = express();
 // Middleware CORS
 app.use(cors());
 
-// Parse JSON pour toutes les routes (sauf cas particulier du webhook, non implémenté ici)
+// -----------------------------------------------------------------------------
+// Webhook Stripe (doit être déclaré AVANT express.json())
+// -----------------------------------------------------------------------------
+app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET || 'whsec_dummy'
+    );
+  } catch (err) {
+    console.error('❌  Signature webhook invalide', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  // Traitement des évènements pertinents
+  switch (event.type) {
+    case 'customer.subscription.updated':
+      console.log('📩 subscription updated');
+      // TODO: mettre à jour la BDD / notifier
+      break;
+    case 'charge.refunded':
+      console.log('📩 charge refunded');
+      // TODO: mettre à jour la BDD / notifier
+      break;
+    default:
+      console.log(`ℹ️  Évènement non géré: ${event.type}`);
+  }
+
+  return res.json({ received: true });
+});
+
+// Parse JSON pour toutes les routes (sauf webhook ci-dessus)
 app.use(express.json());
 
 // Middleware d'authentification simple via header Authorization: Bearer <API_KEY>
