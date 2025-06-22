@@ -51,9 +51,9 @@ class HiveService {
     await Hive.deleteFromDisk();
     await _secureStorage.delete(key: _hiveKeyName);
   }
-}
-
+  
   static Future<void> reset() async {
     await Hive.close();
     _initialized = false;
   }
+}
