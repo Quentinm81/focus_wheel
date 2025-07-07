@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.quentin.focuswheel"
-    compileSdk = 35
+    compileSdk = 34
 
     compileOptions {
         // sourceCompatibility = JavaVersion.VERSION_11 // Commented out
@@ -23,8 +23,8 @@ android {
         applicationId = "com.quentin.focuswheel"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 33
-        targetSdk = 35
+        minSdk = 24
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
