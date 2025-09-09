@@ -19,6 +19,51 @@ require_cmd() {
 require_cmd flutter
 require_cmd adb
 
+# Pré-vérification: présence d'un appareil Samsung
+requested_device_id="${1:-${DEVICE_ID:-}}"
+
+# Récupère la liste des appareils ADB en état "device"
+mapfile -t _adb_ids < <(adb devices -l | awk 'NR>1 && $2=="device" {print $1}') || true
+
+if [[ -n "$requested_device_id" ]]; then
+	# Vérifie que l'ID demandé est bien connecté
+	if [[ ! " ${_adb_ids[*]} " =~ " ${requested_device_id} " ]]; then
+		echo "Aucun appareil avec l'ID ${requested_device_id} n'est connecté (ou pas autorisé)." >&2
+		exit 2
+	fi
+	manuf="$(adb -s "$requested_device_id" shell getprop ro.product.manufacturer 2>/dev/null | tr -d '\r' | tr '[:upper:]' '[:lower:]')"
+	[[ -z "$manuf" ]] && manuf="$(adb -s "$requested_device_id" shell getprop ro.vendor.product.manufacturer 2>/dev/null | tr -d '\r' | tr '[:upper:]' '[:lower:]')"
+	[[ -z "$manuf" ]] && manuf="$(adb -s "$requested_device_id" shell getprop ro.product.brand 2>/dev/null | tr -d '\r' | tr '[:upper:]' '[:lower:]')"
+	if [[ "$manuf" != *samsung* ]]; then
+		echo "L'appareil ${requested_device_id} n'est pas reconnu comme un Samsung (manufacturer='${manuf:-inconnu}')." >&2
+		exit 2
+	fi
+	export DEVICE_ID="$requested_device_id"
+else
+	# Recherche automatique d'un appareil Samsung
+	declare -a samsung_ids=()
+	for _id in "${_adb_ids[@]:-}"; do
+		manuf="$(adb -s "$_id" shell getprop ro.product.manufacturer 2>/dev/null | tr -d '\r' | tr '[:upper:]' '[:lower:]')"
+		[[ -z "$manuf" ]] && manuf="$(adb -s "$_id" shell getprop ro.vendor.product.manufacturer 2>/dev/null | tr -d '\r' | tr '[:upper:]' '[:lower:]')"
+		[[ -z "$manuf" ]] && manuf="$(adb -s "$_id" shell getprop ro.product.brand 2>/dev/null | tr -d '\r' | tr '[:upper:]' '[:lower:]')"
+		if [[ "$manuf" == *samsung* ]]; then
+			samsung_ids+=("$_id")
+		fi
+	done
+
+	if [[ ${#samsung_ids[@]} -eq 0 ]]; then
+		echo "Aucun appareil Samsung détecté. Branchez le téléphone, activez le débogage USB et autorisez l'empreinte (adb devices)." >&2
+		exit 2
+	elif [[ ${#samsung_ids[@]} -gt 1 ]]; then
+		echo "Plusieurs appareils Samsung détectés. Spécifiez un ID: DEVICE_ID=<id> bash scripts/android_run.sh" >&2
+		printf '%s\n' "${samsung_ids[@]}"
+		exit 2
+	else
+		export DEVICE_ID="${samsung_ids[0]}"
+		echo "Appareil Samsung détecté: $DEVICE_ID"
+	fi
+fi
+
 # Assure la présence d'android/local.properties avec flutter.sdk
 local_props="$project_root/android/local.properties"
 if [[ ! -f "$local_props" ]]; then
